@@ -31,8 +31,8 @@ app.post('/reset', (req, res) => {
     res.json({ message: "Status nulstillet" });
 });
 
-const PORT = process.env.PORT || 10000; // Brug Render's miljøport eller fallback til 10000
-app.listen(PORT, '0.0.0.0', () => {
+const PORT = process.env.PORT || 10000; // Brug Render's port eller fallback til 10000
+app.listen(PORT, () => {
     console.log(`✅ Server kører på port ${PORT}`);
 });
 
