@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const PORT = process.env.PORT || 4000; // Brug Render's miljøport eller fallback til 4000
 
 const app = express();
 app.use(cors());
@@ -31,8 +32,7 @@ app.post('/reset', (req, res) => {
     res.json({ message: "Status nulstillet" });
 });
 
-const PORT = process.env.PORT || 10000; // Brug Render's port eller fallback til 10000
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`✅ Server kører på port ${PORT}`);
 });
 
