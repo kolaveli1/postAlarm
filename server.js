@@ -1,28 +1,31 @@
-require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 
 const app = express();
-app.use(express.json());
 app.use(cors());
+app.use(bodyParser.json());
 
 let postStatus = "Ingen post";
+let iosClients = []; // Holder styr på forbundne iOS-enheder
 
-// ESP32 sender en HTTP-anmodning hertil, når post registreres
+// ESP32 sender POST-anmodning, når der er post
 app.post('/postkasse', (req, res) => {
     console.log("Post registreret!");
     postStatus = "Der er post!";
 
-    // Send notifikation til iOS (tilføjes senere med Firebase Cloud Messaging)
-    res.json({ message: "Notifikation sendt til iOS" });
+    // Send besked til alle forbundne iOS-enheder
+    iosClients.forEach(res => res.json({ status: postStatus }));
+
+    res.json({ message: "Poststatus opdateret!" });
 });
 
-// iOS app kan tjekke status
+// iOS registrerer sig selv på serveren for at modtage opdateringer
 app.get('/status', (req, res) => {
-    res.json({ status: postStatus });
+    iosClients.push(res);
 });
 
-// iOS kan nulstille status når brugeren trykker "OK"
+// iOS kan nulstille poststatus når brugeren trykker "OK"
 app.post('/reset', (req, res) => {
     postStatus = "Ingen post";
     res.json({ message: "Status nulstillet" });
